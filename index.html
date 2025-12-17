@@ -6,236 +6,174 @@
 <style>
 body { 
     font-family: Arial, sans-serif; 
+    margin: 0; 
+    background: #f0f2f5; 
     text-align: center; 
-    background: #f0f0f0; 
 }
-h1 { 
-    margin-top: 20px; 
+h1 { margin: 20px 0; }
+
+/* Разделы */
+.section { display: none; margin: 20px; }
+
+/* Профиль */
+#profileSection {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-#menu, #profileSection, #minesSection, #game, #bonusSection, #topSection, #adminLogSection { 
-    display: none; 
-    margin-top: 20px; 
-}
-.row { 
-    display: flex; 
-    justify-content: center; 
-}
-.cell { 
-    width: 50px; 
-    height: 50px; 
-    margin: 2px; 
-    font-size: 24px; 
-    background: #ccc; 
-    border: 1px solid #999; 
-    cursor: pointer; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    user-select: none;
-}
-.revealed { 
-    background: #eee; 
-    cursor: default; 
-}
-.flag { 
-    color: green; 
-    font-weight: bold; 
-}
-#info { 
-    margin-top: 10px; 
-}
-button { 
-    font-size: 16px; 
-    padding: 5px 10px; 
-    margin: 2px; 
-    border-radius: 8px; /* закругленные кнопки */
+#profileSection p { margin: 10px 0; font-weight: bold; }
+
+/* Игровые карточки */
+.gameCard {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-input { 
-    width: 80px; 
-    font-size: 16px; 
+#minesCard { background: #3498db; }
+#blackjackCard { background: #e74c3c; }
+
+/* Бонус */
+#bonusSection {
+    background: #f1c40f;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px auto;
+    width: 90%;
+    color: #2c3e50;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-select { 
-    font-size: 16px; 
+#bonusSection button {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
 }
-#gameControls { 
-    margin-bottom: 10px; 
+
+/* Нижняя панель */
+#bottomBar {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: #fff; display: flex; justify-content: space-around;
+    border-top: 1px solid #ccc; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); padding: 10px 0;
 }
-#adminLogSection { 
-    max-height: 200px; 
-    overflow-y: scroll; 
-    border: 1px solid #999; 
-    background:#fff; 
-    padding:5px; 
-    margin:10px; 
+.bottomTab { flex: 1; text-align: center; cursor: pointer; font-weight: bold; color: #3498db; }
+
+/* Мины поле */
+#game { margin-top: 10px; }
+.row { display: flex; justify-content: center; }
+.cell { 
+    width: 50px; height: 50px; margin: 2px; font-size: 24px; 
+    background: #95a5a6; border: 1px solid #7f8c8d; display: flex; 
+    justify-content: center; align-items: center; cursor: pointer; user-select: none;
+    border-radius: 6px;
 }
+.revealed { background: #ecf0f1; cursor: default; }
+.flag { color: green; font-weight: bold; }
+#info { margin-top: 10px; }
+#gameControls { margin-bottom: 10px; }
+button { border-radius: 8px; cursor: pointer; }
 </style>
 </head>
 <body>
 
 <h1>Gmines Casino</h1>
 
-<!-- Главное меню -->
-<div id="menu">
-  <button id="profileBtnMenu">Профиль 👤</button>
-  <button id="minesBtnMenu">Мины</button>
-  <button id="bonusBtnMenu">Бонус 💰</button>
-  <button id="topBtnMenu">Топ 10 🏆</button>
-</div>
-
 <!-- Профиль -->
-<div id="profileSection">
-  <h2>Профиль</h2>
-  <p>ID: <span id="playerID">0</span></p>
-  <p>Баланс: <span id="balance">0</span></p>
-  <p>Всего игр: <span id="totalGames">0</span></p>
-  <p>Выиграно: <span id="wins">0</span></p>
-  <p>Проиграно: <span id="losses">0</span></p>
-  <button id="backFromProfile">Назад</button>
+<div id="profileSection" class="section">
+    <h2>Добро пожаловать, <span id="playerName">Игрок</span>!</h2>
+    <p>Баланс: <span id="balanceDisplay">0</span> монет</p>
+    <p>Сыграно игр: <span id="totalGamesDisplay">0</span></p>
+    <p>Проиграно монет: <span id="lossesDisplay">0</span></p>
 </div>
 
-<!-- Мины -->
-<div id="minesSection">
-  <h2>Мины 5x5</h2>
-  <label>Ставка: <input type="number" id="stakeInput" min="1" value="100"></label>
-  <label>Мины: <select id="minesSelect"></select></label>
-  <br><br>
-  <button id="startGameBtn">Начать игру</button>
-  <button id="backFromMines">Назад</button>
+<!-- Игровые карточки -->
+<div id="gamesSection" class="section">
+    <div class="gameCard" id="minesCard" onclick="showMines()">Mines 💣</div>
+    <div class="gameCard" id="blackjackCard" onclick="alert('Blackjack скоро!')">21 🃏</div>
+
+    <!-- Бонус -->
+    <div id="bonusSection">
+        <span id="bonusText">Бонус доступен!</span>
+        <button id="collectBonusBtn">Collect</button>
+    </div>
+
+    <!-- Мины игра -->
+    <div id="info">
+        Баланс: <span id="balanceGame">0</span> | 
+        Ставка: <span id="stakeDisplay">0</span> | 
+        Множитель: <span id="multiplier">1.00</span>x
+        <button id="cashOut">Забрать</button>
+    </div>
+    <div id="gameControls">
+        <button id="backToMenu">Выйти из игры</button>
+    </div>
+    <div id="game"></div>
 </div>
 
-<!-- Бонус -->
-<div id="bonusSection">
-  <h2>Бонус раз в час</h2>
-  <p id="bonusInfo"></p>
-  <button id="getBonusBtn">Получить бонус</button>
-  <button id="backFromBonus">Назад</button>
+<!-- Топ -->
+<div id="topSection" class="section">
+    <h2>Топ игроков</h2>
+    <ol id="topList"></ol>
 </div>
 
-<!-- Топ 10 -->
-<div id="topSection">
-  <h2>Топ 10 по балансу</h2>
-  <ol id="topList"></ol>
-  <button id="backFromTop">Назад</button>
+<!-- Нижняя панель -->
+<div id="bottomBar">
+    <div class="bottomTab" onclick="showSection('profile')">Профиль</div>
+    <div class="bottomTab" onclick="showSection('games')">Игры</div>
+    <div class="bottomTab" onclick="showSection('top')">Топ</div>
 </div>
-
-<!-- Админ-кнопка -->
-<button id="adminGiveCoins" style="display:none;">Выдать монеты</button>
-
-<!-- Лог админа -->
-<div id="adminLogSection"></div>
-
-<!-- Инфо и кнопки игры -->
-<div id="info">
-  Баланс: <span id="balanceGame">0</span> | 
-  Ставка: <span id="stakeDisplay">0</span> | 
-  Множитель: <span id="multiplier">1.00</span>x
-  <button id="cashOut">Забрать</button>
-</div>
-
-<div id="gameControls">
-  <button id="backToMenu">Назад в меню</button>
-</div>
-
-<!-- Игровое поле -->
-<div id="game"></div>
 
 <script>
-// --------------------- Инициализация ---------------------
+// --------------------- Игрок ---------------------
 let playerData = JSON.parse(localStorage.getItem('playerData')) || {
-    balance: 1000, totalGames: 0, wins: 0, losses: 0, lastBonus: 0, id: 395852120
+    balance: 1400, totalGames: 0, wins: 0, losses: 0, lastBonus: 0, id: 395852120, name: "Игрок"
 };
 let topPlayers = JSON.parse(localStorage.getItem('topPlayers')) || [];
-let adminLog = JSON.parse(localStorage.getItem('adminLog')) || [];
 
-if(!playerData.id){
-    playerData.id = Math.floor(Math.random() * 900000000) + 100000000; // 9-значный ID
-    savePlayerData();
-}
+// --------------------- Нижняя панель ---------------------
+function showSection(section){
+    document.getElementById('profileSection').style.display = 'none';
+    document.getElementById('gamesSection').style.display = 'none';
+    document.getElementById('topSection').style.display = 'none';
 
-let stake = 0, multiplier = 1.0, maxBonus = 3.0;
-let width = 5, height = 5;
-let minesCount = 5;
-let board = [], revealed = [], flags = [];
-let totalSafe = 0, openedSafe = 0, gameOver = false;
+    if(section==='profile') updateProfile();
+    if(section==='top') updateTopList();
 
-// Инициализация select с мин
-const minesSelect = document.getElementById('minesSelect');
-for(let i=1;i<=24;i++){ let opt = document.createElement('option'); opt.value=i; opt.text=i; minesSelect.appendChild(opt); }
-
-// --------------------- Главное меню ---------------------
-function showMenu(){ 
-    document.getElementById('menu').style.display='block';
-    document.getElementById('profileSection').style.display='none';
-    document.getElementById('minesSection').style.display='none';
-    document.getElementById('bonusSection').style.display='none';
-    document.getElementById('topSection').style.display='none';
-    document.getElementById('game').style.display='none';
-    document.getElementById('info').style.display='none';
-    document.getElementById('gameControls').style.display='none';
-    document.getElementById('adminLogSection').style.display='none';
+    document.getElementById(section+'Section').style.display = 'block';
 }
 
 // --------------------- Профиль ---------------------
-document.getElementById('profileBtnMenu').onclick = function(){
-    document.getElementById('menu').style.display='none';
-    document.getElementById('profileSection').style.display='block';
-    document.getElementById('balance').innerText = playerData.balance;
-    document.getElementById('totalGames').innerText = playerData.totalGames;
-    document.getElementById('wins').innerText = playerData.wins;
-    document.getElementById('losses').innerText = playerData.losses;
-    document.getElementById('playerID').innerText = playerData.id;
-};
-document.getElementById('backFromProfile').onclick = showMenu;
-
-// --------------------- Мины ---------------------
-document.getElementById('minesBtnMenu').onclick = function(){
-    document.getElementById('menu').style.display='none';
-    document.getElementById('minesSection').style.display='block';
-};
-document.getElementById('backFromMines').onclick = showMenu;
-
-// --------------------- Бонус ---------------------
-document.getElementById('bonusBtnMenu').onclick = function(){
-    document.getElementById('menu').style.display='none';
-    document.getElementById('bonusSection').style.display='block';
-    updateBonusInfo();
-};
-document.getElementById('backFromBonus').onclick = showMenu;
-
-function updateBonusInfo(){
-    let now = Date.now();
-    let diff = now - playerData.lastBonus;
-    if(diff >= 3600000) document.getElementById('bonusInfo').innerText = "Бонус доступен!";
-    else{
-        let min = Math.ceil((3600000 - diff)/60000);
-        document.getElementById('bonusInfo').innerText = `Следующий бонус через ${min} минут`;
-    }
+function updateProfile(){
+    document.getElementById('playerName').innerText = playerData.name;
+    document.getElementById('balanceDisplay').innerText = playerData.balance;
+    document.getElementById('totalGamesDisplay').innerText = playerData.totalGames;
+    document.getElementById('lossesDisplay').innerText = playerData.losses;
 }
-document.getElementById('getBonusBtn').onclick = function(){
-    let now = Date.now();
-    if(now - playerData.lastBonus >= 3600000){
-        let bonus = Math.floor(Math.random()*1001)+500;
-        playerData.balance += bonus;
-        playerData.lastBonus = now;
-        savePlayerData();
-        updateBonusInfo();
-        alert(`Вы получили бонус: ${bonus}!`);
-    } else alert("Бонус ещё недоступен");
-};
 
-// --------------------- Топ 10 ---------------------
-document.getElementById('topBtnMenu').onclick = function(){
-    document.getElementById('menu').style.display='none';
-    document.getElementById('topSection').style.display='block';
-    updateTopList();
-};
-document.getElementById('backFromTop').onclick = showMenu;
-
+// --------------------- Топ ---------------------
 function updateTopList(){
-    let list = document.getElementById('topList');
-    list.innerHTML='';
     topPlayers.sort((a,b)=>b.balance-a.balance);
+    let list = document.getElementById('topList');
+    list.innerHTML = '';
     topPlayers.slice(0,10).forEach(p=>{
         let li = document.createElement('li');
         li.innerText = `${p.name}: ${p.balance}`;
@@ -243,152 +181,39 @@ function updateTopList(){
     });
 }
 
-// --------------------- Сохранение ---------------------
-function savePlayerData(){
-    localStorage.setItem('playerData', JSON.stringify(playerData));
-    updateTopPlayers();
-}
-function updateTopPlayers(){
-    let existing = topPlayers.find(p=>p.name==='Игрок');
-    if(existing) existing.balance = playerData.balance;
-    else topPlayers.push({name:'Игрок', balance:playerData.balance});
-    localStorage.setItem('topPlayers', JSON.stringify(topPlayers));
-}
-
-// --------------------- Админ кнопка ---------------------
-const adminBtn = document.createElement('button');
-adminBtn.innerText = "Выдать монеты";
-adminBtn.onclick = function(){
-    let amount = parseInt(prompt("Введите количество монет для выдачи:"));
-    if(amount && amount>0){
-        playerData.balance += amount;
-        savePlayerData();
-        document.getElementById('balance').innerText = playerData.balance;
-        document.getElementById('balanceGame').innerText = playerData.balance;
-        alert(`Вы выдали себе ${amount} монет`);
-    }
-};
-
-// Показываем админ-кнопку только для твоего ID
-if(playerData.id == 395852120){
-    document.getElementById('menu').appendChild(adminBtn);
-}
-
-// --------------------- Начало игры ---------------------
-document.getElementById('startGameBtn').onclick = function(){
-    stake = parseInt(document.getElementById('stakeInput').value);
-    if(!stake || stake <1 || stake>playerData.balance){ alert("Неверная ставка"); return; }
-    playerData.balance -= stake; savePlayerData();
-    document.getElementById('balanceGame').innerText = playerData.balance;
-    document.getElementById('stakeDisplay').innerText = stake;
-
-    minesCount = parseInt(minesSelect.value);
-
-    document.getElementById('minesSection').style.display='none';
-    document.getElementById('game').style.display='block';
-    document.getElementById('info').style.display='block';
-    document.getElementById('gameControls').style.display='block';
-
-    startGame();
-}
-
-// --------------------- Кнопка «Назад в меню» ---------------------
-document.getElementById('backToMenu').onclick = function(){
-    gameOver = true;
-    document.getElementById('game').style.display='none';
-    document.getElementById('info').style.display='none';
-    document.getElementById('gameControls').style.display='none';
-    showMenu();
-}
-
-// --------------------- Кнопка «Забрать» ---------------------
-document.getElementById('cashOut').onclick = function(){
-    if(gameOver) return;
-    let winAmount = Math.round(stake*multiplier);
-    playerData.balance += winAmount; savePlayerData();
-    document.getElementById('balanceGame').innerText = playerData.balance;
-    stake=0; document.getElementById('stakeDisplay').innerText=stake;
-    gameOver=true;
-}
-
-// --------------------- Функции игры ---------------------
-function startGame(){
-    board = Array(height).fill().map(()=>Array(width).fill(0));
-    revealed = Array(height).fill().map(()=>Array(width).fill(false));
-    flags = Array(height).fill().map(()=>Array(width).fill(false));
-    openedSafe=0; totalSafe=width*height-minesCount; multiplier=1.0; gameOver=false;
-    document.getElementById('multiplier').innerText=multiplier.toFixed(2);
-    playerData.totalGames++;
-
-    const gameDiv=document.getElementById('game');
-    gameDiv.innerHTML='';
-    for(let y=0;y<height;y++){
-        const rowDiv=document.createElement('div'); rowDiv.className='row';
-        for(let x=0;x<width;x++){
-            const cell=document.createElement('div'); cell.className='cell';
-            cell.dataset.x=x; cell.dataset.y=y;
-            cell.oncontextmenu=function(e){e.preventDefault(); rightClick(x,y);};
-            cell.onclick=function(){leftClick(x,y);};
-            rowDiv.appendChild(cell);
-        }
-        gameDiv.appendChild(rowDiv);
-    }
-    generateMines();
-}
-
-function generateMines(){
-    let placed=0;
-    while(placed<minesCount){
-        let x=Math.floor(Math.random()*width), y=Math.floor(Math.random()*height);
-        if(board[y][x]===-1) continue;
-        board[y][x]=-1; placed++;
-    }
-}
-
-function updateMultiplier(){
-    multiplier = 1.0 + (openedSafe/totalSafe)*maxBonus;
-    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
-}
-
-function leftClick(x,y){
-    if(gameOver || revealed[y][x] || flags[y][x]) return;
-    const cellDiv = document.querySelector(`.cell[data-x='${x}'][data-y='${y}']`);
-    if(board[y][x]===-1){ cellDiv.innerText='💣'; cellDiv.classList.add('revealed'); endGame(false); return;}
-    revealed[y][x]=true; openedSafe++; cellDiv.innerText='💎'; cellDiv.classList.add('revealed'); updateMultiplier();
-    if(openedSafe===totalSafe) endGame(true);
-}
-
-function rightClick(x,y){
-    if(gameOver || revealed[y][x]) return;
-    const cellDiv=document.querySelector(`.cell[data-x='${x}'][data-y='${y}']`);
-    if(!flags[y][x]){ flags[y][x]=true; cellDiv.innerText='🚩'; cellDiv.classList.add('flag'); }
-    else{ flags[y][x]=false; cellDiv.innerText=''; cellDiv.classList.remove('flag'); }
-}
-
-function endGame(win){
-    gameOver=true;
-    for(let y=0;y<height;y++){
-        for(let x=0;x<width;x++){
-            const cellDiv=document.querySelector(`.cell[data-x='${x}'][data-y='${y}']`);
-            if(board[y][x]===-1){
-                if(flags[y][x]) cellDiv.style.background='green';
-                else{ cellDiv.innerText='💣'; cellDiv.style.background='red'; }
-            }
-            cellDiv.onclick=null; cellDiv.oncontextmenu=null;
-        }
-    }
-    if(win){
-        let winAmount=Math.round(stake*multiplier);
-        playerData.balance += winAmount; playerData.wins++; savePlayerData();
+// --------------------- Бонус ---------------------
+const bonusText = document.getElementById('bonusText');
+const collectBtn = document.getElementById('collectBonusBtn');
+collectBtn.onclick = function(){
+    let now = Date.now();
+    if(now - playerData.lastBonus >= 3600000){
+        let bonus = Math.floor(Math.random()*1001)+500;
+        playerData.balance += bonus;
+        playerData.lastBonus = now;
+        bonusText.innerText = "Бонус забран!";
+        updateProfile();
+        alert(`Вы получили бонус: ${bonus}!`);
     } else {
-        playerData.balance=0; playerData.losses++; savePlayerData();
+        let remaining = 3600000 - (now - playerData.lastBonus);
+        let min = Math.floor(remaining/60000);
+        let sec = Math.floor((remaining%60000)/1000);
+        alert(`Бонус ещё недоступен: ${min} мин ${sec} сек`);
     }
 }
 
-document.getElementById('balanceGame').innerText = playerData.balance;
-document.getElementById('playerID').innerText = playerData.id;
-showMenu();
+// --------------------- Игры ---------------------
+let stake=100, multiplier=1, width=5, height=5, minesCount=5;
+let board=[], revealed=[], flags=[], totalSafe=0, openedSafe=0, gameOver=false;
+
+const minesSelect = document.getElementById('minesSelect');
+
+// --------------------- Показ Мины ---------------------
+function showMines(){
+    showSection('games');
+    alert("Здесь будет мини-игра Мины");
+}
+
+showSection('profile');
 </script>
 </body>
 </html>
-
