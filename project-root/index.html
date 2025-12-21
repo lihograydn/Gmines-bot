@@ -334,22 +334,17 @@ document.getElementById('startGame').onclick = function(){
     const gameDiv = document.getElementById('minesGame');
     gameDiv.innerHTML = '';
 
+    // Генерируем позиции мин
     while(mines.length < totalMines){
         let r = Math.floor(Math.random() * gridSize * gridSize);
         if(!mines.includes(r)) mines.push(r);
     }
 
-    for(let i=0;i<gridSize*gridSize;i++){
+    for(let i=0; i<gridSize*gridSize; i++){
         let btn = document.createElement('div');
         btn.className = 'mineCell';
         btn.dataset.index = i;
-
-        let img = document.createElement('img');
-        img.src = 'images/question.png';
-        img.style.width = '40px';
-        img.style.height = '40px';
-        btn.appendChild(img);
-
+        btn.innerText = '❓';   // закрытая клетка через эмодзи
         btn.onclick = clickCell;
         gameDiv.appendChild(btn);
     }
@@ -362,27 +357,21 @@ function clickCell(){
     if(revealed.includes(idx)) return;
 
     revealed.push(idx);
-    this.innerHTML = '';
-    let img = document.createElement('img');
-    img.style.width = '40px';
-    img.style.height = '40px';
 
     if(mines.includes(idx)){
-        img.src = 'images/mine.png';
-        this.appendChild(img);
+        this.innerText = '💣';    // мина
         this.style.background = '#e74c3c';
         showAllMines();
         alert('Вы наткнулись на мину! Игра окончена.');
         playerData.balance -= stake;
         gameActive = false;
         return;
-    } else {
-        img.src = 'images/icon.png';
-        this.appendChild(img);
-        this.style.background = '#2ecc71';
-        multiplier *= 1.01 + (totalMines/24);
-        document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     }
+
+    this.innerText = '💎';       // безопасная клетка
+    this.style.background = '#2ecc71';
+    multiplier *= 1.01 + (totalMines/24);
+    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
 
     if(revealed.length === gridSize*gridSize - totalMines){
         showVictory();
@@ -398,12 +387,7 @@ function clickCell(){
 function showAllMines(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
-            cell.innerHTML = '';
-            let img = document.createElement('img');
-            img.src = 'images/mine.png';
-            img.style.width = '40px';
-            img.style.height = '40px';
-            cell.appendChild(img);
+            cell.innerText = '💣';
             cell.style.background = '#e74c3c';
         }
     });
@@ -413,12 +397,7 @@ function showAllMines(){
 function showVictory(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
-            cell.innerHTML = '';
-            let img = document.createElement('img');
-            img.src = 'images/icon.png';
-            img.style.width = '40px';
-            img.style.height = '40px';
-            cell.appendChild(img);
+            cell.innerText = '💎';
             cell.style.background = '#2ecc71';
         }
     });
@@ -438,3 +417,4 @@ showSection('profile');
 </script>
 </body>
 </html>
+
