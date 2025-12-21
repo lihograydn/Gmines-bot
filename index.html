@@ -4,12 +4,7 @@
 <meta charset="UTF-8">
 <title>Gmines Casino</title>
 <style>
-body { 
-    font-family: Arial, sans-serif; 
-    margin: 0; 
-    background: #f0f2f5; 
-    text-align: center; 
-}
+body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; text-align: center; }
 h1 { margin: 20px 0; }
 
 /* Разделы */
@@ -47,7 +42,7 @@ h1 { margin: 20px 0; }
     height: 100%;
     border-radius: 20px;
     display: block;
-    object-fit: cover; 
+    object-fit: cover;
 }
 #blackjackCard { background: #e74c3c; }
 
@@ -85,47 +80,33 @@ h1 { margin: 20px 0; }
 
 /* Экран Mines */
 #minesGameScreen { display: none; margin: 20px; }
-
-#gameControls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
-#gameControls select, #gameControls button {
-    border: none;
-    border-radius: 12px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-}
+#gameControls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+#gameControls select, #gameControls button { border: none; border-radius: 12px; padding: 10px 15px; cursor: pointer; font-weight: bold; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
 #gameControls button { background: #2ecc71; color: #fff; }
 #backButton { background: #e74c3c; color: #fff; }
-
-#minesGame {
-    display: grid;
-    grid-template-columns: repeat(5, 60px);
-    grid-gap: 10px;
-    justify-content: center;
-    margin: 20px 0;
-}
-.mineCell {
-    width: 60px; height: 60px;
-    border-radius: 12px;
-    background: #3498db;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    font-size: 28px;
-    color: #fff;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-}
+#minesGame { display: grid; grid-template-columns: repeat(5, 60px); grid-gap: 10px; justify-content: center; margin: 20px 0; }
+.mineCell { width: 60px; height: 60px; border-radius: 12px; background: #3498db; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; font-size: 28px; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
 #gameInfo { margin: 10px 0; font-weight: bold; }
 </style>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyChtZKLnua0p7v6H7kzvZ-JxQBnAfSc1uU",
+    authDomain: "gmines.firebaseapp.com",
+    projectId: "gmines",
+    storageBucket: "gmines.firebasestorage.app",
+    messagingSenderId: "422908981848",
+    appId: "1:422908981848:web:c15b3831ad1ff46b86502d",
+    measurementId: "G-EJ949WPESV"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
 </head>
 <body>
 
@@ -199,17 +180,24 @@ h1 { margin: 20px 0; }
 </div>
 
 <script>
-// ---------------- Игрок ----------------
-let playerData = JSON.parse(localStorage.getItem('playerData')) || {
-    balance: 1400, totalGames: 0, wins: 0, losses: 0, lastBonus: 0, id: 395852120, name: "Игрок"
-};
-let topPlayers = JSON.parse(localStorage.getItem('topPlayers')) || [];
-document.getElementById('balanceDisplay').innerText = playerData.balance;
-document.getElementById('balanceGame').innerText = playerData.balance;
+let playerId = 395852120; // уникальный ID игрока (можно менять)
+let playerData = {balance: 1400, totalGames:0, losses:0, lastBonus:0, name:"Игрок"};
+let topPlayers = [];
 
-// ---------------- Сохранение прогресса ----------------
-function savePlayerData() {
-    localStorage.setItem('playerData', JSON.stringify(playerData));
+function savePlayerData(){
+  db.collection('users').doc(playerId.toString()).set(playerData);
+}
+
+function loadPlayerData(){
+  db.collection('users').doc(playerId.toString()).get().then(doc=>{
+    if(doc.exists){
+      playerData = doc.data();
+    } else {
+      db.collection('users').doc(playerId.toString()).set(playerData);
+    }
+    updateProfile();
+    updateBalance();
+  });
 }
 
 // ---------------- Нижняя панель ----------------
@@ -231,18 +219,21 @@ function updateProfile(){
     document.getElementById('balanceDisplay').innerText = playerData.balance;
     document.getElementById('totalGamesDisplay').innerText = playerData.totalGames;
     document.getElementById('lossesDisplay').innerText = playerData.losses;
-    savePlayerData();
 }
 
 // ---------------- Топ ----------------
 function updateTopList(){
-    topPlayers.sort((a,b)=>b.balance-a.balance);
-    let list = document.getElementById('topList');
-    list.innerHTML = '';
-    topPlayers.slice(0,10).forEach(p=>{
-        let li = document.createElement('li');
-        li.innerText = `${p.name}: ${p.balance}`;
-        list.appendChild(li);
+    db.collection('users').get().then(snapshot=>{
+        topPlayers = [];
+        snapshot.forEach(doc => topPlayers.push(doc.data()));
+        topPlayers.sort((a,b)=>b.balance-a.balance);
+        let list = document.getElementById('topList');
+        list.innerHTML = '';
+        topPlayers.slice(0,10).forEach(p=>{
+            let li = document.createElement('li');
+            li.innerText = `${p.name}: ${p.balance}`;
+            list.appendChild(li);
+        });
     });
 }
 
@@ -256,6 +247,7 @@ collectBtn.onclick = function(){
         playerData.balance += bonus;
         playerData.lastBonus = now;
         bonusText.innerText = "Бонус забран!";
+        savePlayerData();
         updateProfile();
         alert(`Вы получили бонус: ${bonus}!`);
     } else {
@@ -268,38 +260,29 @@ collectBtn.onclick = function(){
 
 // ---------------- Mines Game ----------------
 let gridSize = 5;
-let mines = [];
-let revealed = [];
-let multiplier = 1;
-let stake = 50;
-let totalMines = 3;
-let gameActive = false;
+let mines = [], revealed = [], multiplier = 1, stake = 50, totalMines = 3, gameActive = false;
 
-// ---------------- Клик по карточке Mines ----------------
 document.getElementById('minesCard').onclick = function(){
     document.getElementById('gamesSection').style.display = 'none';
     document.getElementById('minesGameScreen').style.display = 'block';
     startNewGame();
 };
 
-// ---------------- Кнопка назад ----------------
 document.getElementById('backButton').onclick = function(){
     document.getElementById('minesGameScreen').style.display = 'none';
     showSection('games');
 };
 
-// ---------------- Забрать выигрыш ----------------
 document.getElementById('cashOut').onclick = function(){
     if(!gameActive) return;
     let win = Math.floor(stake * multiplier);
     playerData.balance += win;
+    savePlayerData();
     alert(`Вы забрали: ${win} монет!`);
     gameActive = false;
     updateBalance();
-    savePlayerData();
 };
 
-// ---------------- Клик по клетке ----------------
 function clickCell(){
     if(!gameActive) return;
     let idx = parseInt(this.dataset.index);
@@ -314,9 +297,10 @@ function clickCell(){
         showAllMines();
         alert('Вы наткнулись на мину! Игра окончена.');
         playerData.balance -= stake;
+        playerData.totalGames++;
+        savePlayerData();
         gameActive = false;
         updateBalance();
-        savePlayerData();
         return;
     } else {
         this.style.background = '#2ecc71';
@@ -329,36 +313,32 @@ function clickCell(){
         showVictory();
         let win = Math.floor(stake * multiplier);
         playerData.balance += win;
+        playerData.totalGames++;
+        savePlayerData();
         alert(`Поздравляем! Вы прошли игру и выиграли ${win} монет!`);
         gameActive = false;
         updateBalance();
-        savePlayerData();
     }
 }
 
-// ---------------- Показ всех мин ----------------
 function showAllMines(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
-            cell.innerHTML = '';
-            cell.innerText = '💣';
+            cell.innerHTML = '💣';
             cell.style.background = '#e74c3c';
         }
     });
 }
 
-// ---------------- Показ победы ----------------
 function showVictory(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
-            cell.innerHTML = '';
-            cell.innerText = '💎';
+            cell.innerHTML = '💎';
             cell.style.background = '#2ecc71';
         }
     });
 }
 
-// ---------------- Функции ----------------
 function startNewGame(){
     stake = parseInt(document.getElementById('stakeSelect').value);
     totalMines = parseInt(document.getElementById('minesSelect').value);
@@ -372,7 +352,6 @@ function startNewGame(){
     revealed = [];
     mines = [];
     gameActive = true;
-
     document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     updateBalance();
 
@@ -397,9 +376,9 @@ function startNewGame(){
 function updateBalance(){
     document.getElementById('balanceGame').innerText = playerData.balance;
     document.getElementById('balanceDisplay').innerText = playerData.balance;
-    savePlayerData();
 }
 
+loadPlayerData();
 showSection('profile');
 </script>
 </body>
