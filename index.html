@@ -109,16 +109,18 @@ h1 { margin: 20px 0; }
 }
 .mineCell {
     width: 60px; height: 60px;
-    font-size: 24px;
     border-radius: 12px;
     background: #3498db;
-    color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     user-select: none;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+.mineCell img {
+    width: 40px;
+    height: 40px;
 }
 #gameInfo { margin: 10px 0; font-weight: bold; }
 </style>
@@ -307,7 +309,11 @@ document.getElementById('startGame').onclick = function(){
         let btn = document.createElement('div');
         btn.className = 'mineCell';
         btn.dataset.index = i;
-        btn.innerText = '?';
+
+        let img = document.createElement('img');
+        img.src = 'images/question.png'; // иконка закрытой клетки
+        btn.appendChild(img);
+
         btn.onclick = clickCell;
         gameDiv.appendChild(btn);
     }
@@ -319,21 +325,26 @@ function clickCell(){
     let idx = parseInt(this.dataset.index);
     if(revealed.includes(idx)) return;
 
+    revealed.push(idx);
+    this.innerHTML = '';
+    let img = document.createElement('img');
+
     if(mines.includes(idx)){
-        this.innerText = '💣';
+        img.src = 'images/mine.png'; // иконка мины
+        this.appendChild(img);
         this.style.background = '#e74c3c';
         showAllMines();
         alert('Вы наткнулись на мину! Игра окончена.');
         playerData.balance -= stake;
         gameActive = false;
         return;
+    } else {
+        img.src = 'images/icon.png'; // иконка безопасной клетки
+        this.appendChild(img);
+        this.style.background = '#2ecc71';
+        multiplier *= 1.01 + (totalMines/24);
+        document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     }
-
-    revealed.push(idx);
-    this.innerText = '💎';
-    this.style.background = '#2ecc71';
-    multiplier *= 1.01 + (totalMines/24);
-    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
 
     if(revealed.length === gridSize*gridSize - totalMines){
         showVictory();
@@ -349,7 +360,12 @@ function clickCell(){
 function showAllMines(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
-            cell.innerText = '💣';
+            cell.innerHTML = '';
+            let img = document.createElement('img');
+            img.src = 'images/mine.png';
+            img.style.width = '40px';
+            img.style.height = '40px';
+            cell.appendChild(img);
             cell.style.background = '#e74c3c';
         }
     });
@@ -359,7 +375,12 @@ function showAllMines(){
 function showVictory(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
-            cell.innerText = '💎';
+            cell.innerHTML = '';
+            let img = document.createElement('img');
+            img.src = 'images/icon.png'; // безопасная клетка
+            img.style.width = '40px';
+            img.style.height = '40px';
+            cell.appendChild(img);
             cell.style.background = '#2ecc71';
         }
     });
