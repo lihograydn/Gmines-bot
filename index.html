@@ -47,7 +47,7 @@ h1 { margin: 20px 0; }
     height: 100%;
     border-radius: 20px;
     display: block;
-    object-fit: cover; /* чтобы картинка вписывалась в карточку */
+    object-fit: cover; 
 }
 #blackjackCard { background: #e74c3c; }
 
@@ -151,7 +151,6 @@ h1 { margin: 20px 0; }
     </div>
 </div>
 
-
 <!-- Экран Mines -->
 <div id="minesGameScreen" class="section">
     <div id="gameControls">
@@ -208,6 +207,11 @@ let topPlayers = JSON.parse(localStorage.getItem('topPlayers')) || [];
 document.getElementById('balanceDisplay').innerText = playerData.balance;
 document.getElementById('balanceGame').innerText = playerData.balance;
 
+// ---------------- Сохранение прогресса ----------------
+function savePlayerData() {
+    localStorage.setItem('playerData', JSON.stringify(playerData));
+}
+
 // ---------------- Нижняя панель ----------------
 function showSection(section){
     document.getElementById('profileSection').style.display = 'none';
@@ -227,6 +231,7 @@ function updateProfile(){
     document.getElementById('balanceDisplay').innerText = playerData.balance;
     document.getElementById('totalGamesDisplay').innerText = playerData.totalGames;
     document.getElementById('lossesDisplay').innerText = playerData.losses;
+    savePlayerData();
 }
 
 // ---------------- Топ ----------------
@@ -291,6 +296,7 @@ document.getElementById('cashOut').onclick = function(){
     alert(`Вы забрали: ${win} монет!`);
     gameActive = false;
     updateBalance();
+    savePlayerData();
 };
 
 // ---------------- Клик по клетке ----------------
@@ -310,6 +316,7 @@ function clickCell(){
         playerData.balance -= stake;
         gameActive = false;
         updateBalance();
+        savePlayerData();
         return;
     } else {
         this.style.background = '#2ecc71';
@@ -325,6 +332,7 @@ function clickCell(){
         alert(`Поздравляем! Вы прошли игру и выиграли ${win} монет!`);
         gameActive = false;
         updateBalance();
+        savePlayerData();
     }
 }
 
@@ -389,12 +397,10 @@ function startNewGame(){
 function updateBalance(){
     document.getElementById('balanceGame').innerText = playerData.balance;
     document.getElementById('balanceDisplay').innerText = playerData.balance;
+    savePlayerData();
 }
 
 showSection('profile');
 </script>
 </body>
 </html>
-
-
-
