@@ -154,7 +154,9 @@ h1 { margin: 20px 0; }
 
 <!-- Игры -->
 <div id="gamesSection" class="section">
-    <div class="gameCard" id="minesCard">Mines 💣</div>
+    <div class="gameCard" id="minesCard">
+        Mines
+    </div>
     <div class="gameCard" id="blackjackCard" onclick="alert('Blackjack скоро!')">21 🃏</div>
     <div id="bonusSection">
         <span id="bonusText">Бонус доступен!</span>
@@ -345,7 +347,7 @@ document.getElementById('startGame').onclick = function(){
         btn.dataset.index = i;
 
         let img = document.createElement('img');
-        img.src = 'images/question.png';
+        img.src = 'images/question.png'; // оставляем временный вопрос
         img.style.width = '40px';
         img.style.height = '40px';
         btn.appendChild(img);
@@ -368,7 +370,7 @@ function clickCell(){
     img.style.height = '40px';
 
     if(mines.includes(idx)){
-        img.src = 'images/mine.png';
+        img.src = 'images/mine_new.png'; // новая мина
         this.appendChild(img);
         this.style.background = '#e74c3c';
         showAllMines();
@@ -377,7 +379,7 @@ function clickCell(){
         gameActive = false;
         return;
     } else {
-        img.src = 'images/icon.png';
+        img.src = 'images/safe_new.png'; // новая безопасная клетка
         this.appendChild(img);
         this.style.background = '#2ecc71';
         multiplier *= 1.01 + (totalMines/24);
@@ -400,7 +402,7 @@ function showAllMines(){
         if(mines.includes(idx)){
             cell.innerHTML = '';
             let img = document.createElement('img');
-            img.src = 'images/mine.png';
+            img.src = 'images/mine_new.png';
             img.style.width = '40px';
             img.style.height = '40px';
             cell.appendChild(img);
@@ -415,7 +417,7 @@ function showVictory(){
         if(!mines.includes(idx)){
             cell.innerHTML = '';
             let img = document.createElement('img');
-            img.src = 'images/icon.png';
+            img.src = 'images/safe_new.png';
             img.style.width = '40px';
             img.style.height = '40px';
             cell.appendChild(img);
@@ -438,4 +440,3 @@ showSection('profile');
 </script>
 </body>
 </html>
-
