@@ -77,17 +77,17 @@ h1 { margin: 20px 0; }
 }
 .bottomTab { flex: 1; text-align: center; cursor: pointer; font-weight: bold; color: #3498db; }
 
-/* Мины поле */
-#game { margin-top: 10px; }
-.row { display: flex; justify-content: center; }
-.cell { 
-    width: 50px; height: 50px; margin: 2px; font-size: 24px; 
-    background: #95a5a6; border: 1px solid #7f8c8d; display: flex; 
-    justify-content: center; align-items: center; cursor: pointer; user-select: none;
-    border-radius: 6px;
+/* Поле игры */
+#game {
+    margin-top: 10px;
 }
-.revealed { background: #ecf0f1; cursor: default; }
-.flag { color: green; font-weight: bold; }
+#game img {
+    width: 250px;  /* подберите нужный размер */
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 #info { margin-top: 10px; }
 #gameControls { margin-bottom: 10px; }
 button { border-radius: 8px; cursor: pointer; }
@@ -116,7 +116,7 @@ button { border-radius: 8px; cursor: pointer; }
         <button id="collectBonusBtn">Collect</button>
     </div>
 
-    <!-- Мины игра -->
+    <!-- Место игры -->
     <div id="info">
         Баланс: <span id="balanceGame">0</span> | 
         Ставка: <span id="stakeDisplay">0</span> | 
@@ -202,15 +202,10 @@ collectBtn.onclick = function(){
 }
 
 // --------------------- Игры ---------------------
-let stake=100, multiplier=1, width=5, height=5, minesCount=5;
-let board=[], revealed=[], flags=[], totalSafe=0, openedSafe=0, gameOver=false;
-
-const minesSelect = document.getElementById('minesSelect');
-
-// --------------------- Показ Мины ---------------------
 function showMines(){
     showSection('games');
-    alert("Здесь будет мини-игра Мины");
+    const gameDiv = document.getElementById('game');
+    gameDiv.innerHTML = '<img src="8180c246-bf69-4af3-affe-981258cb0b89.png" alt="Mines Image">';
 }
 
 showSection('profile');
