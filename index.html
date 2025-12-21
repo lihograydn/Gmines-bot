@@ -42,9 +42,10 @@ h1 { margin: 20px 0; }
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-#minesCard { 
-    background: url('images/mines_card.png') no-repeat center center;
-    background-size: cover;
+#minesCard img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
 }
 #blackjackCard { background: #e74c3c; }
 
@@ -117,6 +118,8 @@ h1 { margin: 20px 0; }
     align-items: center;
     justify-content: center;
     user-select: none;
+    font-size: 28px;
+    color: #fff;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
 }
 #gameInfo { margin: 10px 0; font-weight: bold; }
@@ -136,7 +139,9 @@ h1 { margin: 20px 0; }
 
 <!-- Игры -->
 <div id="gamesSection" class="section">
-    <div class="gameCard" id="minesCard">Mines</div>
+    <div class="gameCard" id="minesCard">
+        <img src="images/iconca.png" alt="Mines">
+    </div>
     <div class="gameCard" id="blackjackCard" onclick="alert('Blackjack скоро!')">21 🃏</div>
     <div id="bonusSection">
         <span id="bonusText">Бонус доступен!</span>
@@ -168,7 +173,6 @@ h1 { margin: 20px 0; }
                 <option value="20">20</option>
             </select>
         </div>
-        <button id="startGame">Начать игру</button>
         <button id="cashOut">Забрать выигрыш</button>
         <button id="backButton">Назад</button>
     </div>
@@ -276,8 +280,15 @@ document.getElementById('backButton').onclick = function(){
     showSection('games');
 };
 
-// ---------------- Начать игру ----------------
-document.getElementById('startGame').onclick = startNewGame;
+// ---------------- Забрать выигрыш ----------------
+document.getElementById('cashOut').onclick = function(){
+    if(!gameActive) return;
+    let win = Math.floor(stake * multiplier);
+    playerData.balance += win;
+    alert(`Вы забрали: ${win} монет!`);
+    gameActive = false;
+    updateBalance();
+};
 
 // ---------------- Клик по клетке ----------------
 function clickCell(){
@@ -287,14 +298,10 @@ function clickCell(){
 
     revealed.push(idx);
     this.innerHTML = '';
-    let img = document.createElement('img');
-    img.style.width = '40px';
-    img.style.height = '40px';
 
     if(mines.includes(idx)){
-        img.src = 'images/mine_new.png';
-        this.appendChild(img);
         this.style.background = '#e74c3c';
+        this.innerText = '💣';
         showAllMines();
         alert('Вы наткнулись на мину! Игра окончена.');
         playerData.balance -= stake;
@@ -302,9 +309,8 @@ function clickCell(){
         updateBalance();
         return;
     } else {
-        img.src = 'images/safe_new.png';
-        this.appendChild(img);
         this.style.background = '#2ecc71';
+        this.innerText = '💎';
         multiplier *= 1.01 + (totalMines/24);
         document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     }
@@ -317,7 +323,6 @@ function clickCell(){
         gameActive = false;
         updateBalance();
     }
-    updateBalance();
 }
 
 // ---------------- Показ всех мин ----------------
@@ -325,11 +330,7 @@ function showAllMines(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
             cell.innerHTML = '';
-            let img = document.createElement('img');
-            img.src = 'images/mine_new.png';
-            img.style.width = '40px';
-            img.style.height = '40px';
-            cell.appendChild(img);
+            cell.innerText = '💣';
             cell.style.background = '#e74c3c';
         }
     });
@@ -340,25 +341,11 @@ function showVictory(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
             cell.innerHTML = '';
-            let img = document.createElement('img');
-            img.src = 'images/safe_new.png';
-            img.style.width = '40px';
-            img.style.height = '40px';
-            cell.appendChild(img);
+            cell.innerText = '💎';
             cell.style.background = '#2ecc71';
         }
     });
 }
-
-// ---------------- Забрать выигрыш ----------------
-document.getElementById('cashOut').onclick = function(){
-    if(!gameActive) return;
-    let win = Math.floor(stake * multiplier);
-    playerData.balance += win;
-    alert(`Вы забрали: ${win} монет!`);
-    gameActive = false;
-    updateBalance();
-};
 
 // ---------------- Функции ----------------
 function startNewGame(){
@@ -390,13 +377,7 @@ function startNewGame(){
         let btn = document.createElement('div');
         btn.className = 'mineCell';
         btn.dataset.index = i;
-
-        let img = document.createElement('img');
-        img.src = 'images/question.png';
-        img.style.width = '40px';
-        img.style.height = '40px';
-        btn.appendChild(img);
-
+        btn.innerText = '?';
         btn.onclick = clickCell;
         gameDiv.appendChild(btn);
     }
