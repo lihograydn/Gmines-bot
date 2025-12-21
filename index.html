@@ -77,7 +77,7 @@ h1 { margin: 20px 0; }
 }
 .bottomTab { flex: 1; text-align: center; cursor: pointer; font-weight: bold; color: #3498db; }
 
-/* Поле игры Mines */
+/* Игровая сетка Mines */
 #minesGame {
     display: grid;
     grid-template-columns: repeat(5, 60px);
@@ -98,24 +98,6 @@ h1 { margin: 20px 0; }
     user-select: none;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
 }
-
-/* Контролы игры */
-#gameControls {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-#gameControls button, #gameControls select {
-    border: none;
-    border-radius: 12px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-}
-#gameControls button { background: #2ecc71; color: #fff; }
 
 /* Статистика */
 #gameInfo {
@@ -138,7 +120,7 @@ h1 { margin: 20px 0; }
 
 <!-- Игровые карточки -->
 <div id="gamesSection" class="section">
-    <div class="gameCard" id="minesCard" onclick="showMines()">Mines 💣</div>
+    <div class="gameCard" id="minesCard">Mines 💣</div>
     <div class="gameCard" id="blackjackCard" onclick="alert('Blackjack скоро!')">21 🃏</div>
 
     <!-- Бонус -->
@@ -147,35 +129,8 @@ h1 { margin: 20px 0; }
         <button id="collectBonusBtn">Collect</button>
     </div>
 
-    <!-- Контролы игры -->
-    <div id="gameControls">
-        <div>
-            <label>Ставка: </label>
-            <select id="stakeSelect">
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-                <option value="500">500</option>
-            </select>
-        </div>
-        <div>
-            <label>Мины: </label>
-            <select id="minesSelect">
-                <option value="1">1</option>
-                <option value="3">3</option>
-                <option value="5">5</option>
-                <option value="8">8</option>
-                <option value="12">12</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
-        </div>
-        <button id="startGame">Начать игру</button>
-        <button id="cashOut">Забрать</button>
-    </div>
-
     <!-- Статистика -->
-    <div id="gameInfo">
+    <div id="gameInfo" style="display:none;">
         Баланс: <span id="balanceGame">0</span> | 
         Множитель: <span id="multiplier">1.00</span>x
     </div>
@@ -264,22 +219,24 @@ let gridSize = 5;
 let mines = [];
 let revealed = [];
 let multiplier = 1;
-let stake = 50;
+let stake = 50; // фиксированная ставка
 let totalMines = 3;
 
-function showMines(){
+document.getElementById('minesCard').onclick = function(){
     showSection('games');
-}
+    startGame();
+};
 
 function startGame(){
-    stake = parseInt(document.getElementById('stakeSelect').value);
-    totalMines = parseInt(document.getElementById('minesSelect').value);
     multiplier = 1;
     revealed = [];
     mines = [];
+    document.getElementById('gameInfo').style.display = 'block';
+    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
+    document.getElementById('balanceGame').innerText = playerData.balance;
+
     const gameDiv = document.getElementById('minesGame');
     gameDiv.innerHTML = '';
-    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
 
     // Генерация мин
     while(mines.length < totalMines){
@@ -328,7 +285,6 @@ function clickCell(){
     }
 }
 
-// Показ всех мин при поражении
 function showAllMines(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
@@ -338,7 +294,6 @@ function showAllMines(){
     });
 }
 
-// Показ алмазов при победе
 function showVictory(){
     document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
@@ -348,21 +303,11 @@ function showVictory(){
     });
 }
 
-// Завершение игры
 function endGame(){
     document.getElementById('balanceGame').innerText = playerData.balance;
     document.getElementById('minesGame').innerHTML = '';
+    document.getElementById('gameInfo').style.display = 'none';
 }
-
-// Забрать выигрыш
-document.getElementById('cashOut').onclick = function(){
-    let win = Math.floor(stake * multiplier);
-    playerData.balance += win;
-    alert(`Вы забрали: ${win} монет!`);
-    endGame();
-}
-
-document.getElementById('startGame').onclick = startGame;
 
 showSection('profile');
 </script>
