@@ -4,40 +4,109 @@
 <meta charset="UTF-8">
 <title>Gmines Casino</title>
 <style>
-body { font-family: Arial, sans-serif; margin:0; background:#f0f2f5; text-align:center; }
-h1 { margin:20px 0; }
+body { font-family: Arial, sans-serif; margin: 0; background: #f0f2f5; text-align: center; }
+h1 { margin: 20px 0; }
 
 /* Разделы */
-.section { display:none; margin:20px; }
+.section { display: none; margin: 20px; }
 
 /* Профиль */
-#profileSection { background:linear-gradient(135deg,#6a11cb,#2575fc); color:#fff; border-radius:15px; padding:20px; box-shadow:0 4px 10px rgba(0,0,0,0.2); }
-#profileSection p { margin:10px 0; font-weight:bold; }
+#profileSection {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+#profileSection p { margin: 10px 0; font-weight: bold; }
 
 /* Игровые карточки */
-.gameCard { display:inline-flex; width:120px; height:120px; margin:10px; border-radius:20px; color:#fff; font-weight:bold; font-size:18px; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.2);}
-#minesCard img { width:100%; height:100%; border-radius:20px; object-fit:cover; }
-#blackjackCard { background:#e74c3c; }
+.gameCard {
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+#minesCard img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    display: block;
+    object-fit: cover;
+}
+#blackjackCard { background: #e74c3c; }
 
 /* Бонус */
-#bonusSection { background:#f1c40f; border-radius:15px; padding:15px; margin:15px auto; width:90%; color:#2c3e50; font-weight:bold; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 10px rgba(0,0,0,0.2);}
-#bonusSection button { background:#2ecc71; color:#fff; border:none; border-radius:12px; padding:10px 15px; cursor:pointer; font-weight:bold; }
+#bonusSection {
+    background: #f1c40f;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 15px auto;
+    width: 90%;
+    color: #2c3e50;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+#bonusSection button {
+    background: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
 /* Нижняя панель */
-#bottomBar { position:fixed; bottom:0; left:0; width:100%; background:#fff; display:flex; justify-content:space-around; border-top:1px solid #ccc; box-shadow:0 -2px 5px rgba(0,0,0,0.1); padding:10px 0; }
-.bottomTab { flex:1; text-align:center; cursor:pointer; font-weight:bold; color:#3498db; }
+#bottomBar {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: #fff; display: flex; justify-content: space-around;
+    border-top: 1px solid #ccc; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); padding: 10px 0;
+}
+.bottomTab { flex: 1; text-align: center; cursor: pointer; font-weight: bold; color: #3498db; }
 
 /* Экран Mines */
-#minesGameScreen { display:none; margin:20px; }
-#gameControls { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:15px;}
-#gameControls select, #gameControls button { border:none; border-radius:12px; padding:10px 15px; cursor:pointer; font-weight:bold; box-shadow:0 3px 6px rgba(0,0,0,0.2);}
-#gameControls button { background:#2ecc71; color:#fff;}
-#backButton { background:#e74c3c; color:#fff; }
-
-#minesGame { display:grid; grid-template-columns:repeat(5,60px); grid-gap:10px; justify-content:center; margin:20px 0;}
-.mineCell { width:60px; height:60px; border-radius:12px; background:#3498db; cursor:pointer; display:flex; align-items:center; justify-content:center; user-select:none; font-size:28px; color:#fff; box-shadow:0 3px 6px rgba(0,0,0,0.2);}
-#gameInfo { margin:10px 0; font-weight:bold; }
+#minesGameScreen { display: none; margin: 20px; }
+#gameControls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+#gameControls select, #gameControls button { border: none; border-radius: 12px; padding: 10px 15px; cursor: pointer; font-weight: bold; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+#gameControls button { background: #2ecc71; color: #fff; }
+#backButton { background: #e74c3c; color: #fff; }
+#minesGame { display: grid; grid-template-columns: repeat(5, 60px); grid-gap: 10px; justify-content: center; margin: 20px 0; }
+.mineCell { width: 60px; height: 60px; border-radius: 12px; background: #3498db; cursor: pointer; display: flex; align-items: center; justify-content: center; user-select: none; font-size: 28px; color: #fff; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+#gameInfo { margin: 10px 0; font-weight: bold; }
 </style>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyChtZKLnua0p7v6H7kzvZ-JxQBnAfSc1uU",
+    authDomain: "gmines.firebaseapp.com",
+    projectId: "gmines",
+    storageBucket: "gmines.firebasestorage.app",
+    messagingSenderId: "422908981848",
+    appId: "1:422908981848:web:c15b3831ad1ff46b86502d",
+    measurementId: "G-EJ949WPESV"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
 </head>
 <body>
 
@@ -110,55 +179,38 @@ h1 { margin:20px 0; }
     <div class="bottomTab" onclick="showSection('top')">Топ</div>
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+<script>
+let playerId = 395852120; // уникальный ID игрока (можно менять)
+let playerData = {balance: 1400, totalGames:0, losses:0, lastBonus:0, name:"Игрок"};
+let topPlayers = [];
 
-const firebaseConfig = {
-  apiKey: "AIzaSyChtZKLnua0p7v6H7kzvZ-JxQBnAfSc1uU",
-  authDomain: "gmines.firebaseapp.com",
-  projectId: "gmines",
-  storageBucket: "gmines.firebasestorage.app",
-  messagingSenderId: "422908981848",
-  appId: "1:422908981848:web:c15b3831ad1ff46b86502d",
-  measurementId: "G-EJ949WPESV"
-};
+function savePlayerData(){
+  db.collection('users').doc(playerId.toString()).set(playerData);
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ---------------- Telegram user ID ----------------
-const userId = window.Telegram.WebApp.initDataUnsafe.user.id.toString();
-const userRef = doc(db, "users", userId);
-
-let playerData = {balance:1400, totalGames:0, losses:0, lastBonus:0, name: window.Telegram.WebApp.initDataUnsafe.user.first_name};
-
-// ---------------- Загрузка данных ----------------
-async function loadPlayerData() {
-    const docSnap = await getDoc(userRef);
-    if(docSnap.exists()){
-        playerData = docSnap.data();
+function loadPlayerData(){
+  db.collection('users').doc(playerId.toString()).get().then(doc=>{
+    if(doc.exists){
+      playerData = doc.data();
     } else {
-        await setDoc(userRef, playerData);
+      db.collection('users').doc(playerId.toString()).set(playerData);
     }
     updateProfile();
     updateBalance();
-}
-
-async function savePlayerData(){
-    await setDoc(userRef, playerData);
+  });
 }
 
 // ---------------- Нижняя панель ----------------
 function showSection(section){
-    document.getElementById('profileSection').style.display='none';
-    document.getElementById('gamesSection').style.display='none';
-    document.getElementById('topSection').style.display='none';
-    document.getElementById('minesGameScreen').style.display='none';
+    document.getElementById('profileSection').style.display = 'none';
+    document.getElementById('gamesSection').style.display = 'none';
+    document.getElementById('topSection').style.display = 'none';
+    document.getElementById('minesGameScreen').style.display = 'none';
+
     if(section==='profile') updateProfile();
     if(section==='top') updateTopList();
-    document.getElementById(section+'Section').style.display='block';
+
+    document.getElementById(section+'Section').style.display = 'block';
 }
 
 // ---------------- Профиль ----------------
@@ -170,29 +222,32 @@ function updateProfile(){
 }
 
 // ---------------- Топ ----------------
-let topPlayers = [];
 function updateTopList(){
-    topPlayers.sort((a,b)=>b.balance-a.balance);
-    let list = document.getElementById('topList');
-    list.innerHTML='';
-    topPlayers.slice(0,10).forEach(p=>{
-        let li=document.createElement('li');
-        li.innerText=`${p.name}: ${p.balance}`;
-        list.appendChild(li);
+    db.collection('users').get().then(snapshot=>{
+        topPlayers = [];
+        snapshot.forEach(doc => topPlayers.push(doc.data()));
+        topPlayers.sort((a,b)=>b.balance-a.balance);
+        let list = document.getElementById('topList');
+        list.innerHTML = '';
+        topPlayers.slice(0,10).forEach(p=>{
+            let li = document.createElement('li');
+            li.innerText = `${p.name}: ${p.balance}`;
+            list.appendChild(li);
+        });
     });
 }
 
 // ---------------- Бонус ----------------
 const bonusText = document.getElementById('bonusText');
 const collectBtn = document.getElementById('collectBonusBtn');
-collectBtn.onclick = async function(){
+collectBtn.onclick = function(){
     let now = Date.now();
     if(now - playerData.lastBonus >= 3600000){
         let bonus = Math.floor(Math.random()*1001)+500;
         playerData.balance += bonus;
         playerData.lastBonus = now;
         bonusText.innerText = "Бонус забран!";
-        await savePlayerData();
+        savePlayerData();
         updateProfile();
         alert(`Вы получили бонус: ${bonus}!`);
     } else {
@@ -204,107 +259,125 @@ collectBtn.onclick = async function(){
 }
 
 // ---------------- Mines Game ----------------
-let gridSize=5, mines=[], revealed=[], multiplier=1, stake=50, totalMines=3, gameActive=false;
+let gridSize = 5;
+let mines = [], revealed = [], multiplier = 1, stake = 50, totalMines = 3, gameActive = false;
 
-document.getElementById('minesCard').onclick=function(){
-    document.getElementById('gamesSection').style.display='none';
-    document.getElementById('minesGameScreen').style.display='block';
+document.getElementById('minesCard').onclick = function(){
+    document.getElementById('gamesSection').style.display = 'none';
+    document.getElementById('minesGameScreen').style.display = 'block';
     startNewGame();
 };
-document.getElementById('backButton').onclick=function(){
-    document.getElementById('minesGameScreen').style.display='none';
+
+document.getElementById('backButton').onclick = function(){
+    document.getElementById('minesGameScreen').style.display = 'none';
     showSection('games');
 };
-document.getElementById('cashOut').onclick=async function(){
+
+document.getElementById('cashOut').onclick = function(){
     if(!gameActive) return;
-    let win=Math.floor(stake*multiplier);
-    playerData.balance+=win;
-    await savePlayerData();
+    let win = Math.floor(stake * multiplier);
+    playerData.balance += win;
+    savePlayerData();
     alert(`Вы забрали: ${win} монет!`);
-    gameActive=false;
+    gameActive = false;
     updateBalance();
 };
 
 function clickCell(){
     if(!gameActive) return;
-    let idx=parseInt(this.dataset.index);
+    let idx = parseInt(this.dataset.index);
     if(revealed.includes(idx)) return;
+
     revealed.push(idx);
-    this.innerHTML='';
+    this.innerHTML = '';
+
     if(mines.includes(idx)){
-        this.style.background='#e74c3c';
-        this.innerText='💣';
+        this.style.background = '#e74c3c';
+        this.innerText = '💣';
         showAllMines();
         alert('Вы наткнулись на мину! Игра окончена.');
-        playerData.balance-=stake;
+        playerData.balance -= stake;
+        playerData.totalGames++;
         savePlayerData();
-        gameActive=false;
+        gameActive = false;
         updateBalance();
         return;
     } else {
-        this.style.background='#2ecc71';
-        this.innerText='💎';
+        this.style.background = '#2ecc71';
+        this.innerText = '💎';
         multiplier *= 1.01 + (totalMines/24);
-        document.getElementById('multiplier').innerText=multiplier.toFixed(2);
+        document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     }
-    if(revealed.length===gridSize*gridSize-totalMines){
+
+    if(revealed.length === gridSize*gridSize - totalMines){
         showVictory();
-        let win=Math.floor(stake*multiplier);
-        playerData.balance+=win;
+        let win = Math.floor(stake * multiplier);
+        playerData.balance += win;
+        playerData.totalGames++;
         savePlayerData();
         alert(`Поздравляем! Вы прошли игру и выиграли ${win} монет!`);
-        gameActive=false;
+        gameActive = false;
         updateBalance();
     }
 }
 
 function showAllMines(){
-    document.querySelectorAll('.mineCell').forEach((cell,idx)=>{
+    document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(mines.includes(idx)){
-            cell.innerHTML='';
-            cell.innerText='💣';
-            cell.style.background='#e74c3c';
+            cell.innerHTML = '💣';
+            cell.style.background = '#e74c3c';
         }
     });
 }
+
 function showVictory(){
-    document.querySelectorAll('.mineCell').forEach((cell,idx)=>{
+    document.querySelectorAll('.mineCell').forEach((cell, idx)=>{
         if(!mines.includes(idx)){
-            cell.innerHTML='';
-            cell.innerText='💎';
-            cell.style.background='#2ecc71';
+            cell.innerHTML = '💎';
+            cell.style.background = '#2ecc71';
         }
     });
 }
+
 function startNewGame(){
-    stake=parseInt(document.getElementById('stakeSelect').value);
-    totalMines=parseInt(document.getElementById('minesSelect').value);
-    if(playerData.balance<stake){ alert('Недостаточно баланса для ставки!'); return; }
-    multiplier=1; revealed=[]; mines=[]; gameActive=true;
-    document.getElementById('multiplier').innerText=multiplier.toFixed(2);
+    stake = parseInt(document.getElementById('stakeSelect').value);
+    totalMines = parseInt(document.getElementById('minesSelect').value);
+
+    if(playerData.balance < stake){
+        alert('Недостаточно баланса для ставки!');
+        return;
+    }
+
+    multiplier = 1;
+    revealed = [];
+    mines = [];
+    gameActive = true;
+    document.getElementById('multiplier').innerText = multiplier.toFixed(2);
     updateBalance();
-    const gameDiv=document.getElementById('minesGame');
-    gameDiv.innerHTML='';
-    while(mines.length<totalMines){
-        let r=Math.floor(Math.random()*gridSize*gridSize);
+
+    const gameDiv = document.getElementById('minesGame');
+    gameDiv.innerHTML = '';
+
+    while(mines.length < totalMines){
+        let r = Math.floor(Math.random() * gridSize * gridSize);
         if(!mines.includes(r)) mines.push(r);
     }
+
     for(let i=0;i<gridSize*gridSize;i++){
-        let btn=document.createElement('div');
-        btn.className='mineCell';
-        btn.dataset.index=i;
-        btn.innerText='?';
-        btn.onclick=clickCell;
+        let btn = document.createElement('div');
+        btn.className = 'mineCell';
+        btn.dataset.index = i;
+        btn.innerText = '?';
+        btn.onclick = clickCell;
         gameDiv.appendChild(btn);
     }
 }
 
 function updateBalance(){
-    document.getElementById('balanceGame').innerText=playerData.balance;
-    document.getElementById('balanceDisplay').innerText=playerData.balance;
+    document.getElementById('balanceGame').innerText = playerData.balance;
+    document.getElementById('balanceDisplay').innerText = playerData.balance;
 }
 
-// ---------------- Инициализация ----------------
 loadPlayerData();
 showSection('profile');
 </script>
